@@ -13,4 +13,4 @@ jobs:
     # definitions of all job steps
     steps:
       name: Print Hello World # step name, displayed on UI
-      run: echo Hello World # print "Hello world!" here
+      run: echo $Hello World # print "Hello world!" here
