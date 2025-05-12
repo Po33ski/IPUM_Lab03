@@ -2,12 +2,23 @@
 
 name: CI/CD workflow
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: 'Select which steps to run in the pipeline (integration checks or all steps)'
+        required: true
+        type: choice
+        options:
+          - integration
+          - all
+        default: 'all'
 
 jobs:
    integration:
       name: checks_and_tests
       runs-on: ubuntu-latest
+      if: ${{ inputs.steps == 'all' || inputs.steps == 'integration'}}
       defaults:
           run:
             working-directory: ./polish-sentiment-app
@@ -32,9 +43,11 @@ jobs:
          - name: Run PyTest
            run: uv run pytest tests
   
-   deployment: # 
+   deployment: 
     name:  deployment-jobs
     runs-on: ubuntu-latest
+    if: ${{ inputs.steps == 'all' && needs.integration.result == 'success' }}
+    needs: integration
     defaults:
           run:
             working-directory: ./polish-sentiment-app
