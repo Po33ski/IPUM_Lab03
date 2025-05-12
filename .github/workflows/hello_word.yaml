@@ -14,3 +14,35 @@ jobs:
     steps:
       - name: Print Hello World # step name, displayed on UI
         run: echo $'Hello World' # print "Hello world!" here
+
+
+# name: My Workflow on push
+# on: push
+
+# jobs:
+#   push-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Push
+#         run: git push
+       
+
+
+# # on: pull_request - with filtering by event_types / branches
+# name: My Workflow on pull_request with filtering
+# on:
+#    pull_request:
+#       types:
+#          - opened
+#          - synchronized
+#       branches:
+#          - master
+#          - develop
+
+# jobs:
+#   pull_request_filter:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Pull pull_request
+#         run: git pull 
+
