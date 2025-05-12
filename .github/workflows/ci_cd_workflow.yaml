@@ -1,3 +1,5 @@
+# our CI/CD workflow .yaml file
+
 name: CI/CD workflow
 
 on: workflow_dispatch
@@ -6,6 +8,9 @@ jobs:
    integration:
       name: checks_and_tests
       runs-on: ubuntu-latest
+      defaults:
+          run:
+            working-directory: ./polish-sentiment-app
       steps:
          - name: Checkout code repo
            # this action clones current repository to the VM where our job is running
@@ -26,32 +31,23 @@ jobs:
 
          - name: Run PyTest
            run: uv run pytest tests
-
-   deployment: #
-    name: deployment-jobs
+  
+   deployment: # 
+    name:  deployment-jobs
     runs-on: ubuntu-latest
     defaults:
           run:
-           working-directory: ./polish-sentiment-app
-    steps: 
-      steps:
-        - name: Checkout code repo
-          uses: actions/checkout@v4
-
-        - name: Setup uv
-          run: curl -LsSf https://astral.sh/uv/install.sh | sh
-
-        - name: Install dependencies
-          run: uv sync --group deployment  
-
-        - name: Download model
-          run: uv run python main.py --script download
-
-        - name: Export model
-          run: uv run python main.py --script export
-        
-        - name: Build docker image
-          run: docker build -t polish-sentiment-app-onnx:latest .
-
-
-          
+            working-directory: ./polish-sentiment-app
+    steps:
+      - name: Checkout code repo
+        uses: actions/checkout@v4
+      - name: Setup uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install dependencies
+        run: uv sync --group deployment
+      - name: Download model
+        run: uv run python main.py --script download
+      - name: Export model
+        run: uv run python main.py --script export
+      - name: Build docker image
+        run:  docker build -t polish-sentiment-app-onnx:latest .
